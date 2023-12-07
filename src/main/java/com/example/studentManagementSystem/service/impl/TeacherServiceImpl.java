@@ -55,7 +55,8 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public TeacherCourseResponseDto getTeacherCourses(String teacherId) {
-        return null;
+        Teacher foundedTeacher = teacherRepository.getTeacherCourses(teacherId);
+        return modelMapper.map(foundedTeacher, TeacherCourseResponseDto.class);
     }
 
     /**

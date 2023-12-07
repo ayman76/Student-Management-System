@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class TeacherRepositoryImpl implements TeacherRepository {
@@ -105,6 +107,18 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
     @Override
     public Teacher getTeacherByIdWithCourses(String teacherId) {
-        return null;
+        Teacher founeded_teacher = getTeacherById(teacherId);
+        if (founeded_teacher == null) {
+            return null;
+        }
+
+        CourseRepositoryImpl courseRepository = new CourseRepositoryImpl(jdbcTemplate);
+
+        Set<Course> teacherCourses = courseRepository.getAllCourses().stream().filter(course -> course.getTeacher().getTeacherId().equals(founeded_teacher.getTeacherId())).collect(Collectors.toSet());
+
+        founeded_teacher.setCourses(teacherCourses);
+
+        return founeded_teacher;
+
     }
 }
