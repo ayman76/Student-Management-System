@@ -2,10 +2,12 @@ package com.example.studentManagementSystem.repository.impl;
 
 import com.example.studentManagementSystem.exception.ResourceNotFoundedException;
 import com.example.studentManagementSystem.model.Course;
+import com.example.studentManagementSystem.model.Quiz;
 import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.model.Teacher;
 import com.example.studentManagementSystem.model.mapper.CourseRowMapper;
 import com.example.studentManagementSystem.repository.CourseRepository;
+import com.example.studentManagementSystem.repository.QuizRepository;
 import com.example.studentManagementSystem.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -110,7 +112,12 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public Course getCourseByIdWithQuizzes(String courseId) {
-        return null;
+        Course founeded_course = getCourseById(courseId);
+
+        QuizRepository quizRepository = new QuizRepositoryImpl(jdbcTemplate);
+        List<Quiz> courseQuizzes = quizRepository.getAllQuizzes(courseId).stream().filter(quiz -> quiz.getCourse().getCourseId().equals(courseId)).toList();
+        founeded_course.setQuizzes(courseQuizzes);
+        return founeded_course;
     }
 
     @Override

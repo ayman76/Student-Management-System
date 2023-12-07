@@ -57,7 +57,7 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public CourseTeacherResponseDto getCourseById(String courseId) {
-        Course foundedCourse = findCourseById(courseId);
+        Course foundedCourse = courseRepository.getCourseByIdWithQuizzes(courseId);
         return modelMapper.map(foundedCourse, CourseTeacherResponseDto.class);
     }
 
