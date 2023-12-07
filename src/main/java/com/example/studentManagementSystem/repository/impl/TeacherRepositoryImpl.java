@@ -48,6 +48,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     public Teacher getTeacherCourses(String teacherId) {
         Teacher foundedTeacher = getTeacherById(teacherId);
         try {
+            // Retrieves associated courses from the database and adds them to the Teacher entity
             String sql = "SELECT id, courseName FROM course where course.teacher_id = ?";
             jdbcTemplate.query(sql,
                     new Object[]{teacherId},
@@ -86,11 +87,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         }
 
         try {
-
+            // Deletes associated quizzes
             String deleteQuizzesQuery = "DELETE FROM quiz WHERE course_id IN (SELECT id FROM course WHERE teacher_id = ?)";
             jdbcTemplate.update(deleteQuizzesQuery, teacherId);
 
-            String deleteCoursesSql = "Delete from course where teacher_id = ?";
+            // Deletes associated courses
+            String deleteCoursesSql = "DELETE FROM course WHERE teacher_id = ?";
             jdbcTemplate.update(deleteCoursesSql, teacherId);
 
             String sql = "DELETE FROM teacher WHERE id = ?";
@@ -98,7 +100,6 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
         } catch (Exception ex) {
             throw new RuntimeException("Error occurred while deleting teacher data: " + ex.getMessage());
-
         }
     }
 
