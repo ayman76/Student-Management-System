@@ -54,10 +54,19 @@
         <constructor-arg ref="jdbcTemplate"/>
     </bean>
 
+    <bean id="teacherRepository" class="com.example.studentManagementSystem.repository.impl.TeacherRepositoryImpl">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
     <bean id="modelMapper" class="org.modelmapper.ModelMapper"/>
 
     <bean id="studentService" class="com.example.studentManagementSystem.service.impl.StudentServiceImpl">
         <constructor-arg ref="studentRepository"/>
+        <constructor-arg ref="modelMapper"/>
+    </bean>
+
+    <bean id="teacherService" class="com.example.studentManagementSystem.service.impl.TeacherServiceImpl">
+        <constructor-arg ref="teacherRepository"/>
         <constructor-arg ref="modelMapper"/>
     </bean>
 
