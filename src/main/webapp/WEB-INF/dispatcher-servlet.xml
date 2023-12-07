@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.example.studentManagementSystem"/>
+
+    <!-- Enable Spring MVC annotation-driven configuration -->
+    <mvc:annotation-driven/>
+
+    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/studentManagementSystem?createDatabaseIfNotExist=true"/>
+        <property name="username" value="root"/>
+        <property name="password" value="password@#41"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.example.studentManagementSystem"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+
+        <!-- Define Hibernate-specific properties -->
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="studentRepository" class="com.example.studentManagementSystem.repository.impl.StudentRepositoryImpl">
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="modelMapper" class="org.modelmapper.ModelMapper"/>
+
+    <bean id="studentService" class="com.example.studentManagementSystem.service.impl.StudentServiceImpl">
+        <constructor-arg ref="studentRepository"/>
+        <constructor-arg ref="modelMapper"/>
+    </bean>
+
+</beans>
