@@ -4,7 +4,7 @@ This project implements a REST API service for Student Management Service, that 
 
 ## Documentation
 
-https://documenter.getpostman.com/view/26688798/2s9YeK39u2
+https://documenter.getpostman.com/view/26688798/2s9YkgDk21
 
 ## Requirements
 - Java (version 16 or higher)
